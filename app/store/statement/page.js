@@ -1,13 +1,17 @@
 "use client";
 import { useState, useEffect } from "react";
-import Table from "../(dashboard_Component)/Table";
 import moment from "moment";
-import TableFooter from "../(dashboard_Component)/TableFooter";
-import DatePickers from "../(dashboard_Component)/DatePickers";
-import InputFiled from "../(dashboard_Component)/InputFiled";
 import ApiRequest from "@/app/lib/Api_request";
-import FilterStatus from "../(dashboard_Component)/FilterStatus";
-import SkeletonLoader from "../(dashboard_Component)/SkeletonLoader";
+
+
+import DatePickers from "../../dashboard/(dashboard_Component)/DatePickers";
+import InputFiled from "../../dashboard/(dashboard_Component)/InputFiled";
+import FilterStatus from "../../dashboard/(dashboard_Component)/FilterStatus";
+import Table from "../../dashboard/(dashboard_Component)/Table";
+import TableFooter from "../../dashboard/(dashboard_Component)/TableFooter";
+import SkeletonLoader from "../../dashboard/(dashboard_Component)/SkeletonLoader";
+
+
 
 function page() {
   const headers = [

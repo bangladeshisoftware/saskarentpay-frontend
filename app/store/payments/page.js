@@ -5,20 +5,19 @@ import { MdDeleteForever, MdOutlineQrCodeScanner } from "react-icons/md";
 import { RiDeleteBin2Fill } from "react-icons/ri";
 import { IoMdClose } from "react-icons/io";
 
-import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
 
 import { FaCheck, FaLocationDot, FaPhoneVolume } from "react-icons/fa6";
 import { PiClipboardFill } from "react-icons/pi";
 import { FaSpinner } from "react-icons/fa";
-import Table from "../(dashboard_Component)/Table";
-import ButtonDashboard from "../(dashboard_Component)/ButtonDashboard";
-import TableFooter from "../(dashboard_Component)/TableFooter";
+import ButtonDashboard from "../../dashboard/(dashboard_Component)/ButtonDashboard";
+import Table from "../../dashboard/(dashboard_Component)/Table";
+import TableFooter from "../../dashboard/(dashboard_Component)/TableFooter";
+import SkeletonLoader from "../../dashboard/(dashboard_Component)/SkeletonLoader";
 import { QRCodeSVG } from "qrcode.react";
 import useFetchingData from "@/app/lib/useFetchingData";
 import ApiRequest from "@/app/lib/Api_request";
-import SkeletonLoader from "../(dashboard_Component)/SkeletonLoader";
 function PaymentCopy() {
   const mobileHeaders = ["Sl", "Link"];
   const desktopHeaders = ["Sl", "Link", "Copy Link", "QR Code", "Action"];

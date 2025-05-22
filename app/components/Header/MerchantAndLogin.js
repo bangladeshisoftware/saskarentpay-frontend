@@ -33,6 +33,7 @@ function MerchantAndLogin({ user, password, authToken, adminUrl }) {
     if (deleteToken) {
       router.push("/");
       toast.success("Successfully Logged Out");
+      window.location.reload(true);
     }
   };
 
@@ -59,7 +60,7 @@ function MerchantAndLogin({ user, password, authToken, adminUrl }) {
       let url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/get_webaddress/${user?.id}`;
       try {
         const response = await axios.get(url, {
-          headers: {  
+          headers: {
             Authorization: `Bearer ${authToken}`,
           },
         });
@@ -74,6 +75,7 @@ function MerchantAndLogin({ user, password, authToken, adminUrl }) {
     };
     getAllStore();
   }, [user]);
+
   return (
     <div className="min-w-[100px]">
       {authToken && user && (
@@ -136,8 +138,6 @@ function MerchantAndLogin({ user, password, authToken, adminUrl }) {
                     prefetch={false}
                     onClick={() => {
                       localStorage.removeItem("store");
-                      router.push("/dashboard");
-                      window.location.reload(true);
                     }}
                     className="block px-4 py-2 hover:bg-[#4944E3] hover:text-white rounded-t-lg "
                   >
@@ -149,8 +149,7 @@ function MerchantAndLogin({ user, password, authToken, adminUrl }) {
                     <button
                       onClick={() => {
                         localStorage.setItem("store", JSON.stringify(store));
-                        router.push("/dashboard");
-                        window.location.reload(true);
+                        window.location.href = "/store";
                       }}
                       className="px-4 py-2 hover:bg-[#4944E3] hover:text-white cursor-pointer text-left w-full grid grid-cols-1 break-words"
                     >

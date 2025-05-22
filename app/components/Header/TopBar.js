@@ -59,7 +59,6 @@ const TopBar = async () => {
           </Link>
 
           <div className="flex items-center gap-3">
-            {/* {user?.roles[0]?.name === "Admin" || user?.roles[0]?.name === "Merchant" ? <BecomeMerchant user={user}/> : null} */}
 
             {userData ? (
               <MerchantAndLogin user={userData?.user} password={userData?.password} authToken={token} adminUrl={logoIdentity?.settings?.adminUrl}/>

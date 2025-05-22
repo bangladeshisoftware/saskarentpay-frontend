@@ -4,22 +4,10 @@ import Cookies from "js-cookie";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import {
-  MdSpaceDashboard,
-  MdAccountBalanceWallet,
-  MdPayments,
-  MdAccountBalance,
-  MdBalance,
-  MdDeveloperMode,
-} from "react-icons/md";
-import { FaMoneyCheckAlt, FaHandsHelping, FaUserCog } from "react-icons/fa";
-import { HiDocumentReport } from "react-icons/hi";
-import { TbWorldDown } from "react-icons/tb";
-import { RiSecurePaymentFill } from "react-icons/ri";
 
 import useFetchingData from "@/app/lib/useFetchingData";
 
-function DashboardSideBer() {
+function DashboardSideBer({menuItems}) {
   const [scrollDirection, setScrollDirection] = useState("up");
   const token = Cookies.get("auth_token_font");
   const [storesUser, setStoresUser] = useState(null);
@@ -82,79 +70,6 @@ function DashboardSideBer() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const menuItems = [
-    {
-      href: "/dashboard",
-      icon: <MdSpaceDashboard className="mr-2 text-2xl" />,
-      label: "Dashboard",
-    },
-    {
-      href: "/dashboard/settlement",
-      icon: <MdBalance className="mr-2 text-2xl" />,
-      label: "Settlement",
-    },
-    {
-      href: "/dashboard/developer",
-      icon: <MdDeveloperMode className="mr-2 text-2xl" />,
-      label: "All Stores",
-    },
-    {
-      href: "/dashboard/support",
-      icon: <FaHandsHelping className="mr-2 text-2xl" />,
-      label: "Support",
-    },
-    {
-      href: "/dashboard/reports",
-      icon: <HiDocumentReport className="mr-2 text-2xl" />,
-      label: "Reports",
-    },
-    {
-      href: "/dashboard/profile",
-      icon: <FaUserCog className="mr-2 text-2xl" />,
-      label: "Profile",
-    },
-    {
-      href: "/dashboard/allowed_ip",
-      icon: <TbWorldDown className="mr-2 text-2xl" />,
-      label: "Allowed IP",
-    },
-  ];
-
-  const menuItemsStore = [
-    {
-      href: "/dashboard",
-      icon: <MdSpaceDashboard className="mr-2 text-2xl" />,
-      label: "Dashboard",
-    },
-    {
-      href: "/dashboard/cash-in",
-      icon: <MdAccountBalanceWallet className="mr-2 text-2xl" />,
-      label: "Deposit",
-    },
-    {
-      href: "/dashboard/payout",
-      icon: <FaMoneyCheckAlt className="mr-2 text-2xl" />,
-      label: "Payout",
-    },
-    {
-      href: "/dashboard/payments",
-      icon: <MdPayments className="mr-2 text-2xl" />,
-      label: "Payments",
-    },
-    {
-      href: "/dashboard/statement",
-      icon: <MdAccountBalance className="mr-2 text-2xl" />,
-      label: "Statement Balance",
-    },
-    {
-      href: "/dashboard/payment_page",
-      icon: <RiSecurePaymentFill className="mr-2 text-2xl" />,
-      label: "Payment Page",
-    },
-  ];
-
-  const menuToRender = storesUser?.api_id ? menuItemsStore : menuItems || [];
-
   return (
     <div
       className={`hidden lg:block lg:w-[300px] mr-5 mt-10 rounded-md ${
@@ -168,7 +83,7 @@ function DashboardSideBer() {
     >
       <aside className="px-4 mt-5">
         <ul>
-          {menuToRender?.map((item) => (
+          {menuItems?.map((item) => (
             <MenuItem
               key={item.href}
               href={item.href}

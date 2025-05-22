@@ -2,15 +2,15 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import moment from "moment";
-import Table from "../(dashboard_Component)/Table";
-import TableFooter from "../(dashboard_Component)/TableFooter";
-import DatePickers from "../(dashboard_Component)/DatePickers";
-import InputFiled from "../(dashboard_Component)/InputFiled";
-import FilterStatus from "../(dashboard_Component)/FilterStatus";
-import { TextCopy } from "../(dashboard_Component)/TextCopy";
+import DatePickers from "../../dashboard/(dashboard_Component)/DatePickers";
+import InputFiled from "../../dashboard/(dashboard_Component)/InputFiled";
+import FilterStatus from "../../dashboard/(dashboard_Component)/FilterStatus";
+import Table from "../../dashboard/(dashboard_Component)/Table";
+import TableFooter from "../../dashboard/(dashboard_Component)/TableFooter";
+import { TextCopy } from "../../dashboard/(dashboard_Component)/TextCopy";
+import SkeletonLoader from "../../dashboard/(dashboard_Component)/SkeletonLoader";
 import { GetCookies } from "@/app/lib/cookiesSetting";
 import ApiRequest from "@/app/lib/Api_request";
-import SkeletonLoader from "../(dashboard_Component)/SkeletonLoader";
 
 function Payout() {
   const headers = [
