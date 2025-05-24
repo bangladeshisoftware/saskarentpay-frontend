@@ -48,11 +48,6 @@ export default async function  LoginLayout({ children }) {
       label: "Profile",
     },
     {
-      href: "/dashboard/payment_page",
-      icon: <RiSecurePaymentFill className="mr-2 text-2xl" />,
-      label: "Payment Page",
-    },
-    {
       href: "/dashboard/allowed_ip",
       icon: <TbWorldDown className="mr-2 text-2xl" />,
       label: "Allowed IP",

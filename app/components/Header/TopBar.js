@@ -4,6 +4,7 @@ import Link from "next/link";
 import MerchantAndLogin from "./MerchantAndLogin";
 import { GetCookies } from "@/app/lib/cookiesSetting";
 import { fetchingDataGet } from "@/app/lib/fetchingDataGet";
+import BecomeMerchant from "../BecomeMerchant/BecomeMerchant";
 
 const TopBar = async () => {
   const token = await GetCookies({ name: "auth_token_font" });
@@ -12,7 +13,9 @@ const TopBar = async () => {
     "/api/front/setting/header-setting"
   );
   const fetchData = await fetchingDataGet("/api/front/setting/header-setting");
-  const logoIdentity = await fetchingDataGet("/api/front/setting/logo-identity");
+  const logoIdentity = await fetchingDataGet(
+    "/api/front/setting/logo-identity"
+  );
 
   const logo = fetchData?.settings?.HeaderBanner;
 
@@ -59,9 +62,14 @@ const TopBar = async () => {
           </Link>
 
           <div className="flex items-center gap-3">
-
+            <BecomeMerchant />
             {userData ? (
-              <MerchantAndLogin user={userData?.user} password={userData?.password} authToken={token} adminUrl={logoIdentity?.settings?.adminUrl}/>
+              <MerchantAndLogin
+                user={userData?.user}
+                password={userData?.password}
+                authToken={token}
+                adminUrl={logoIdentity?.settings?.adminUrl}
+              />
             ) : (
               <>
                 <Link

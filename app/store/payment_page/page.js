@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
-import InputFiledLabel from "../(dashboard_Component)/InputFiledLabel";
+import InputFiledLabel from "../../dashboard/(dashboard_Component)/InputFiledLabel";
 import { FaSpinner } from "react-icons/fa6";
 import { GetCookies } from "@/app/lib/cookiesSetting";
 
@@ -25,15 +25,25 @@ function PaymentPage() {
   const imageRef = React.createRef();
 
   const [loading, setLoading] = useState(false);
+  const [storesUser, setStoresUser] = useState(null);
+  const [storeLoading, setStoreLoading] = useState(true);
 
   useEffect(() => {
-    getPaymentSettings();
+    const store = JSON.parse(localStorage.getItem("store"));
+    if (store) {
+      setStoresUser(store);
+    }
+    setStoreLoading(false);
   }, []);
+  useEffect(() => {
+    getPaymentSettings();
+  }, [storeLoading]);
   const getPaymentSettings = async () => {
+    if (!storesUser?.api_id) return;
     const token = await GetCookies({ name: "auth_token_font" });
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/merchant/payment-settings`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/merchant/payment-settings/${storesUser?.api_id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -42,7 +52,7 @@ function PaymentPage() {
       );
       const data = response?.data[0];
 
-      setData(response?.data);
+      setData(data);
       setPaymentTitle(data?.payment_title);
       setSupport(data?.support);
       setFaq(data?.faq);
@@ -72,39 +82,31 @@ function PaymentPage() {
     formData.append("mobile_number", mobileNumber ? mobileNumber : "");
     formData.append("address", address ? address : "");
 
-    if (data?.length > 0 && data[0].id) {
+    if (!data?.id) {
+      formData.append("key_id", storesUser?.api_id);
+    }
+    if (data?.id) {
       formData.append("_method", "PUT");
     }
     setLoading(true);
     let token = await GetCookies({ name: "auth_token_font" });
     try {
-      if (data?.length > 0 && data[0].id) {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/merchant/payment-settings/${data[0].id}`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        getPaymentSettings();
-        toast.success("Form submitted successfully!");
-      } else {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/merchant/payment-settings`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        getPaymentSettings();
-        toast.success("Form submitted successfully!");
-      }
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/merchant/payment-settings${
+          data?.id ? `/${data?.id}` : ""
+        }`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      getPaymentSettings();
+      toast.success(
+        `Payment Setting ${data?.id ? "Updated" : "Created"} Successfully!`
+      );
     } catch (error) {
       toast.error("Failed to submit form.");
       //   console.error(error);
@@ -115,7 +117,7 @@ function PaymentPage() {
   const handleONchange = (e) => {
     const file = e.target.files[0];
     const fileInput = document.getElementById("icon");
-  
+
     if (file) {
       const allowedExtensions = [
         ".png",
@@ -134,7 +136,7 @@ function PaymentPage() {
         /<!DOCTYPE html>/i,
       ];
       const fileName = file.name.toLowerCase();
-  
+
       // Extension check
       const hasValidExtension = allowedExtensions.some((ext) =>
         fileName.endsWith(ext)
@@ -146,7 +148,7 @@ function PaymentPage() {
         setCompanyLogo(null);
         return;
       }
-  
+
       // MIME type check
       if (!file.type.startsWith("image/")) {
         toast.error("Invalid image file type!", { autoClose: 3000 });
@@ -155,18 +157,20 @@ function PaymentPage() {
         setCompanyLogo(null);
         return;
       }
-  
+
       const reader = new FileReader();
-  
+
       reader.onload = function (event) {
         const result = event.target.result;
-  
+
         // Text content detect করার জন্য আমরা প্রথম 2000 character নেয়
-        const textSnippet = new TextDecoder("utf-8").decode(result.slice(0, 2000));
+        const textSnippet = new TextDecoder("utf-8").decode(
+          result.slice(0, 2000)
+        );
         const isCodeInjected = forbiddenPatterns.some((pattern) =>
           pattern.test(textSnippet)
         );
-  
+
         if (isCodeInjected) {
           toast.error("Image file contains suspicious code!", {
             autoClose: 3000,
@@ -176,18 +180,17 @@ function PaymentPage() {
           setCompanyLogo(null);
           return;
         }
-  
+
         // ✅ Passed all checks
         setCompanyImages(file);
         const url = URL.createObjectURL(file);
         setCompanyLogo(url);
       };
-  
+
       // সব image file কেই binary হিসেবে পড়ে
       reader.readAsArrayBuffer(file);
     }
   };
-  
 
   const handleAgentToggle = async (e) => {
     const formData = new FormData();
@@ -205,10 +208,11 @@ function PaymentPage() {
     formData.append("auto_payment_active", autoToggle);
     formData.append("p2p_payment_active", manualToggle);
     formData.append("_method", "PUT");
+    formData.append("payment_id", data?.id);
 
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/merchant/payment-settings/${data[0]?.id}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/merchant/payment-settings/${data?.id}`,
         formData,
         {
           headers: {
@@ -246,10 +250,11 @@ function PaymentPage() {
     formData.append("auto_payment_active", e);
     formData.append("p2p_payment_active", manualToggle);
     formData.append("_method", "PUT");
+    formData.append("payment_id", data?.id);
 
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/merchant/payment-settings/${data[0]?.id}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/merchant/payment-settings/${data?.id}`,
         formData,
         {
           headers: {
@@ -284,12 +289,12 @@ function PaymentPage() {
     formData.append("manual_payment_active", agentToggle);
     formData.append("auto_payment_active", autoToggle);
     formData.append("p2p_payment_active", e);
-
     formData.append("_method", "PUT");
+    formData.append("payment_id", data?.id);
 
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/merchant/payment-settings/${data[0]?.id}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/merchant/payment-settings/${data?.id}`,
         formData,
         {
           headers: {
@@ -386,7 +391,7 @@ function PaymentPage() {
                   <FaSpinner className="animate-spin" />
                   Loading...
                 </span>
-              ) : data?.length > 0 && data[0].id ? (
+              ) : data?.id ? (
                 "Update"
               ) : (
                 "Add"

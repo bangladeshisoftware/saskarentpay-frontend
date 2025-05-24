@@ -1,17 +1,21 @@
-
 import DashboardSideBer from "../dashboard/(dashboard_Component)/DashboardSideBer";
 import { GetCookies } from "@/app/lib/cookiesSetting";
 import { redirect } from "next/navigation";
 import { FaMoneyCheckAlt } from "react-icons/fa";
-import { MdAccountBalance, MdAccountBalanceWallet, MdPayments, MdSpaceDashboard } from "react-icons/md";
+import {
+  MdAccountBalance,
+  MdAccountBalanceWallet,
+  MdPayments,
+  MdSpaceDashboard,
+} from "react-icons/md";
+import { RiSecurePaymentFill } from "react-icons/ri";
 
-export default async function  LoginLayout({ children }) {
+export default async function LoginLayout({ children }) {
   const token = await GetCookies({ name: "auth_token_font" });
 
   if (!token) {
     redirect("/auth/login");
   }
-  
 
   const menuItemsStore = [
     {
@@ -39,15 +43,20 @@ export default async function  LoginLayout({ children }) {
       icon: <MdAccountBalance className="mr-2 text-2xl" />,
       label: "Statement Balance",
     },
+    {
+      href: "/store/payment_page",
+      icon: <RiSecurePaymentFill className="mr-2 text-2xl" />,
+      label: "Payment Page",
+    },
   ];
-  
+
   return (
     <>
       <div className={` flex min-h-[88vh] container mx-auto`}>
-        <DashboardSideBer menuItems = {menuItemsStore}/>
+        <DashboardSideBer menuItems={menuItemsStore} />
         <section className="w-full mt-5 lg:mt-10 overflow-hidden">
           <div className="px-1">{children}</div>
-        </section>        
+        </section>
       </div>
     </>
   );

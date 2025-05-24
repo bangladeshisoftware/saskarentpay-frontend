@@ -16,8 +16,7 @@ function Wtransactions() {
   const headers = [
     "Sl",
     "Date",
-    // "Merchant Info",
-    "Business Name",
+    "Store",
     "Settlement Info",
     "Payment Info",
     "Amount / Fee",

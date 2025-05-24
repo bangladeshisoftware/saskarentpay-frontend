@@ -133,16 +133,15 @@ function MerchantAndLogin({ user, password, authToken, adminUrl }) {
                 aria-labelledby="dropdownDefaultButton"
               >
                 <li className="border-b border-gray-300 rounded-t-lg">
-                  <Link
-                    href="/dashboard"
-                    prefetch={false}
+                  <button
                     onClick={() => {
                       localStorage.removeItem("store");
+                      window.location.href = "/dashboard";
                     }}
-                    className="block px-4 py-2 hover:bg-[#4944E3] hover:text-white rounded-t-lg "
+                    className="block text-left px-4 py-2 hover:bg-[#4944E3] hover:text-white rounded-t-lg cursor-pointer w-full"
                   >
                     Dashboard
-                  </Link>
+                  </button>
                 </li>
                 {storesUser?.map((store) => (
                   <li key={store?.id} className="border-b border-gray-300">
